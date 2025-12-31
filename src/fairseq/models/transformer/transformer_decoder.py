@@ -11,7 +11,6 @@ import torch.nn as nn
 from torch import Tensor
 
 from fairseq import utils
-from fairseq.distributed import fsdp_wrap
 from fairseq.models import FairseqIncrementalDecoder
 from fairseq.models.transformer import TransformerConfig
 from fairseq.modules import (
@@ -180,7 +179,6 @@ class TransformerDecoderBase(FairseqIncrementalDecoder):
         # if we are checkpointing, enforce that FSDP always wraps the
         # checkpointed layer, regardless of layer size
         min_params_to_wrap = cfg.min_params_to_wrap if not checkpoint else 0
-        layer = fsdp_wrap(layer, min_num_params=min_params_to_wrap)
         return layer
 
     def forward(

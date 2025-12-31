@@ -11,7 +11,6 @@ from fairseq.modules.transformer_sentence_encoder import init_bert_params
 from typing import Optional
 from fairseq.models.xmod.hub_interface import XMODHubInterface
 import torch
-from fairseq.distributed import fsdp_wrap
 from fairseq.models import (
     register_model,
     register_model_architecture,
@@ -169,7 +168,6 @@ class XMODTransformerEncoder(TransformerEncoder):
         # if we are checkpointing, enforce that FSDP always wraps the
         # checkpointed layer, regardless of layer size
         min_params_to_wrap = cfg.min_params_to_wrap if not checkpoint else 0
-        layer = fsdp_wrap(layer, min_num_params=min_params_to_wrap)
         return layer
 
     def forward(

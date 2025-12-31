@@ -15,7 +15,6 @@ import torch.nn.functional as F
 from fairseq import utils
 from fairseq.data.data_utils import compute_mask_indices
 from fairseq.dataclass import ChoiceEnum, FairseqDataclass
-from fairseq.distributed import fsdp_wrap
 from fairseq.models import BaseFairseqModel, register_model
 from fairseq.distributed.fully_sharded_data_parallel import FullyShardedDataParallel
 from fairseq.modules import (
@@ -1004,7 +1003,6 @@ class TransformerEncoder(nn.Module):
                     layer_norm_first=args.layer_norm_first,
                 )
 
-        layer = fsdp_wrap(layer)
         if args.checkpoint_activations:
             layer = checkpoint_wrapper(layer)
         return layer
@@ -1191,7 +1189,6 @@ class ConformerEncoder(TransformerEncoder):
             pos_enc_type=args.pos_enc_type,
             use_fp16=args.fp16,  # only used for rope
         )
-        layer = fsdp_wrap(layer)
         if args.checkpoint_activations:
             layer = checkpoint_wrapper(layer)
         return layer
